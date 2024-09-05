@@ -7,6 +7,13 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Crop+",
   description: "AI-Powered Crop Health Monitoring",
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      
+    ],
+    
+  },
 };
 
 export default function RootLayout({
