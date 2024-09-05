@@ -26,7 +26,7 @@ export default function Dashboard() {
       }, 2000);
     }
     return () => clearInterval(interval);
-  }, [isAnalyzing]);
+  }, [isAnalyzing, analyzeSteps.length]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]

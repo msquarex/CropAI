@@ -40,7 +40,7 @@ export default function ContactUs() {
                 Get in Touch
               </h1>
               <p className="mt-4 text-emerald-800 text-lg md:text-xl max-w-[700px] mx-auto">
-                Have questions or need assistance? We're here to help. Reach out to us using any of the methods below.
+                Have questions or need assistance? We&apos;re here to help. Reach out to us using any of the methods below.
               </p>
             </motion.div>
 
