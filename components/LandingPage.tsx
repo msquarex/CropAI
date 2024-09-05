@@ -1,15 +1,20 @@
 'use client';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Target, Leaf, BarChart, Shield, ArrowRight } from 'lucide-react';
+import { Target, Leaf, BarChart, Shield, ArrowRight, Menu } from 'lucide-react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 export default function LandingPage() {
   const featuresRef = useRef<HTMLElement>(null);
   const pricingRef = useRef<HTMLElement>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   const scrollToFeatures = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -29,7 +34,7 @@ export default function LandingPage() {
           <Leaf className="h-6 w-6 text-emerald-600" />
           <span className="ml-2 text-xl font-bold text-emerald-800">CropAI</span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
+        <nav className="ml-auto hidden md:flex gap-4 sm:gap-6">
           <Link href="/dashboard" className="text-sm font-medium hover:text-emerald-600 hover:underline underline-offset-4">
             Dashboard
           </Link>
@@ -40,10 +45,36 @@ export default function LandingPage() {
             Pricing
           </a>
           <Link href="/contact" className="text-sm font-medium hover:text-emerald-600 hover:underline underline-offset-4">
-              Contact
+            Contact
           </Link>
         </nav>
+        <button onClick={toggleMenu} className="ml-auto md:hidden">
+          <Menu className="h-6 w-6 text-emerald-600" />
+        </button>
       </header>
+
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-50 bg-white md:hidden">
+          <div className="flex flex-col items-center justify-center h-full space-y-8">
+            <Link href="/dashboard" className="text-lg font-medium" onClick={toggleMenu}>
+              Dashboard
+            </Link>
+            <a href="#features" className="text-lg font-medium" onClick={(e) => { scrollToFeatures(e); toggleMenu(); }}>
+              Features
+            </a>
+            <a href="#pricing" className="text-lg font-medium" onClick={(e) => { scrollToPricing(e); toggleMenu(); }}>
+              Pricing
+            </a>
+            <Link href="/contact" className="text-lg font-medium" onClick={toggleMenu}>
+              Contact
+            </Link>
+            <button onClick={toggleMenu} className="mt-8 text-emerald-600">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Main content */}
       <main className="flex-1 pt-16">
