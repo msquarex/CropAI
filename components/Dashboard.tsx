@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Home, Leaf, Bug, Droplet, Upload, User, Camera, X, Facebook, Twitter, Instagram } from "lucide-react"
+import { Home, Leaf, Bug, Droplet, Upload, User, Camera, X, Facebook, Twitter, Instagram, CameraIcon, SwitchCamera } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 
@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analyzeStep, setAnalyzeStep] = useState(0)
   const [isCameraOpen, setIsCameraOpen] = useState(false)
+  const [facingMode, setFacingMode] = useState<'user' | 'environment'>('environment')
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -41,13 +42,23 @@ export default function Dashboard() {
   const handleCameraCapture = async () => {
     try {
       setIsCameraOpen(true)
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: facingMode } 
+      })
       if (videoRef.current) {
         videoRef.current.srcObject = stream
       }
     } catch (error) {
       console.error("Error accessing camera:", error)
       setIsCameraOpen(false)
+    }
+  }
+
+  const switchCamera = async () => {
+    setFacingMode(prevMode => prevMode === 'user' ? 'environment' : 'user')
+    if (isCameraOpen) {
+      await closeCamera()
+      handleCameraCapture()
     }
   }
 
@@ -163,7 +174,10 @@ export default function Dashboard() {
                     <video ref={videoRef} autoPlay playsInline className="w-full rounded-lg" />
                     <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-4">
                       <Button onClick={capturePhoto} className="bg-emerald-600 text-white hover:bg-emerald-700">
-                        Capture
+                        <CameraIcon className="mr-2 h-4 w-4" /> Capture
+                      </Button>
+                      <Button onClick={switchCamera} className="bg-emerald-600 text-white hover:bg-emerald-700">
+                        <SwitchCamera className="mr-2 h-4 w-4" /> Switch Camera
                       </Button>
                       <Button onClick={closeCamera} className="bg-red-600 text-white hover:bg-red-700">
                         <X className="h-4 w-4" />
