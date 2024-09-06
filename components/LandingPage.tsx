@@ -16,15 +16,7 @@ export default function LandingPage() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const scrollToFeatures = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const scrollToPricing = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    pricingRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-emerald-50 to-white text-emerald-900">
@@ -35,18 +27,41 @@ export default function LandingPage() {
           <span className="ml-2 text-xl font-bold text-emerald-800">CropAI</span>
         </Link>
         <nav className="ml-auto hidden md:flex gap-4 sm:gap-6">
+        <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
           <Link href="/dashboard" className="text-sm font-medium hover:text-emerald-600 hover:underline underline-offset-4">
             Dashboard
           </Link>
-          <a href="#features" onClick={scrollToFeatures} className="text-sm font-medium hover:text-emerald-600 hover:underline underline-offset-4">
+          </motion.div>
+          <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+
+          <a href="/about" className="text-sm font-medium hover:text-emerald-600 hover:underline underline-offset-4">
             Features
           </a>
-          <a href="#pricing" onClick={scrollToPricing} className="text-sm font-medium hover:text-emerald-600 hover:underline underline-offset-4">
+            </motion.div>
+          <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+
+          <a href="/about"  className="text-sm font-medium hover:text-emerald-600 hover:underline underline-offset-4">
             Pricing
           </a>
+          </motion.div>
+          <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+
           <Link href="/contact" className="text-sm font-medium hover:text-emerald-600 hover:underline underline-offset-4">
             Contact
           </Link>
+          </motion.div>
         </nav>
         <button onClick={toggleMenu} className="ml-auto md:hidden">
           <Menu className="h-6 w-6 text-emerald-600" />
@@ -57,13 +72,14 @@ export default function LandingPage() {
       {isMenuOpen && (
         <div className="fixed inset-0 z-50 bg-white md:hidden">
           <div className="flex flex-col items-center justify-center h-full space-y-8">
+            
             <Link href="/dashboard" className="text-lg font-medium" onClick={toggleMenu}>
               Dashboard
             </Link>
-            <a href="#features" className="text-lg font-medium" onClick={(e) => { scrollToFeatures(e); toggleMenu(); }}>
+            <a href="/about" className="text-lg font-medium" onClick={toggleMenu}>
               Features
             </a>
-            <a href="#pricing" className="text-lg font-medium" onClick={(e) => { scrollToPricing(e); toggleMenu(); }}>
+            <a href="/about" className="text-lg font-medium" onClick={toggleMenu}>
               Pricing
             </a>
             <Link href="/contact" className="text-lg font-medium" onClick={toggleMenu}>
@@ -111,16 +127,27 @@ export default function LandingPage() {
                   Revolutionize your farming with our advanced AI and ML technology. Monitor crop health and detect diseases using aerial imagery.
                 </p>
                 <div className="flex space-x-4">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
                   <Link href="/dashboard">
                     <Button className="bg-emerald-600 text-white hover:bg-emerald-700 transition-all duration-300" size="lg">
                       Go to Dashboard
                     </Button>
                   </Link>
+                  </motion.div>
+                  <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+
                   <Link href="/about">
                   <Button className="bg-white text-emerald-600 hover:bg-emerald-50 border border-emerald-600 transition-all duration-300" size="lg">
                     Learn More <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                   </Link>
+                </motion.div>
                 </div>
               </motion.div>
               <motion.div 
