@@ -62,7 +62,7 @@ export default function Login() {
           </Button>
         </form>
         <div className="text-sm text-center">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link href="/signup" className="text-emerald-600 hover:underline">
             Sign up
           </Link>
