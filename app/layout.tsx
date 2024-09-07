@@ -1,9 +1,9 @@
-
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from '@/lib/auth';
 import LeafCursor from '@/components/LeafCursor';
+import CustomCursorStyles from '@/components/CustomCursorStyles';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,13 +29,7 @@ export default function RootLayout({
           {children}
         </AuthProvider>
         <LeafCursor />
-        <style jsx global>{`
-          @media (hover: hover) and (pointer: fine) {
-            html, body, * {
-              cursor: none !important;
-            }
-          }
-        `}</style>
+        <CustomCursorStyles />
       </body>
     </html>
   );
