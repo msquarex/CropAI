@@ -113,3 +113,14 @@
     --ring: 142.4 71.8% 29.2%;
   }
 }
+
+@layer base {
+  /* ... existing styles ... */
+  html, body, * {
+    cursor: none !important;
+  }
+}
+
+.leaf-cursor {
+  pointer-events: none;
+}
