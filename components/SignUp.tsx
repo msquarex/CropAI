@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { FiMail, FiLock } from 'react-icons/fi';
+import { FiMail, FiLock, FiHome } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { Leaf } from 'lucide-react';
 import Modal from '@/components/ui/Modal';
@@ -58,6 +58,14 @@ export default function SignUp() {
           opacity: 0.1,
         }}
       />
+        <div className="absolute top-4 right-4"> {/* Changed from left-4 to right-4 */}
+          <Link href="/">
+            <Button variant="outline" className="bg-white text-emerald-600 hover:bg-emerald-50 border border-emerald-600 transition-all duration-300">
+              <FiHome className="mr-2 h-4 w-4" />
+              Home
+            </Button>
+          </Link>
+        </div>
       <div className="flex flex-col items-center justify-center mb-8 relative z-10">
         <Leaf className="h-12 w-12 text-emerald-600 mb-2" />
         <span className="text-4xl font-bold text-center text-emerald-800">CropAI</span>
