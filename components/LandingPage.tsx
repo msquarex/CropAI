@@ -121,7 +121,7 @@ export default function LandingPage() {
                 transition={{ duration: 0.5 }}
               >
                 <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl text-emerald-900 leading-tight">
-                  AI-Powered Crop Health <span className="text-emerald-600">CHUT</span>
+                  AI-Powered Crop Health <span className="text-emerald-600">Monitoring</span>
                 </h1>
                 <p className="text-emerald-800 text-lg md:text-xl max-w-[600px]">
                   Revolutionize your farming with our advanced AI and ML technology. Monitor crop health and detect diseases using aerial imagery.
