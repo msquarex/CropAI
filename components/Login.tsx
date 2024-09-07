@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
-export default function SignUp() {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,7 +20,7 @@ export default function SignUp() {
     setIsLoading(true);
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       router.push('/dashboard');
     } catch (error: any) {
       setError(error.message);
@@ -32,7 +32,7 @@ export default function SignUp() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-emerald-50">
       <div className="w-full max-w-md p-8 space-y-3 rounded-xl bg-white shadow-lg">
-        <h1 className="text-2xl font-bold text-center text-emerald-600">Sign Up</h1>
+        <h1 className="text-2xl font-bold text-center text-emerald-600">Log In</h1>
         {error && <p className="text-red-500 text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-1">
@@ -58,13 +58,13 @@ export default function SignUp() {
             />
           </div>
           <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" disabled={isLoading}>
-            {isLoading ? 'Signing Up...' : 'Sign Up'}
+            {isLoading ? 'Logging In...' : 'Log In'}
           </Button>
         </form>
         <div className="text-sm text-center">
-          Already have an account?{' '}
-          <Link href="/login" className="text-emerald-600 hover:underline">
-            Log in
+          Don't have an account?{' '}
+          <Link href="/signup" className="text-emerald-600 hover:underline">
+            Sign up
           </Link>
         </div>
       </div>

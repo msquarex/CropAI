@@ -6,8 +6,24 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Home, Leaf, Bug, Droplet, Upload, User, Camera, X, Facebook, Twitter, Instagram, CameraIcon, SwitchCamera } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import { useAuth } from '@/lib/auth';
+import { auth } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -123,10 +139,8 @@ export default function Dashboard() {
             Home
           </Link>
           
-          
-          <Button variant="ghost" size="icon">
-            <User className="h-5 w-5" />
-            <span className="sr-only">User account</span>
+          <Button onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white">
+            Log Out
           </Button>
         </nav>
       </header>

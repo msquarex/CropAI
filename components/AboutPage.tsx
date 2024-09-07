@@ -34,9 +34,7 @@ export default function AboutPage() {
           <Link href="/" className="text-sm font-medium hover:text-emerald-600 hover:underline underline-offset-4">
             Home
           </Link>
-          <Link href="/dashboard" className="text-sm font-medium hover:text-emerald-600 hover:underline underline-offset-4">
-            Dashboard
-          </Link>
+         
         </nav>
       </header>
 
