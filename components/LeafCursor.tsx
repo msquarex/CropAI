@@ -5,23 +5,32 @@ import { Leaf } from 'lucide-react';
 
 const LeafCursor = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   // Adjust these values to fine-tune the leaf position
   const leafSize = 32; // Assuming the leaf is 32x32 pixels
-  const horizontalOffset = leafSize ;
-  const verticalOffset = leafSize-30; // Adjust this value to match the leaf's edge with the cursor
+  const horizontalOffset = leafSize;
+  const verticalOffset = leafSize - 30; // Adjust this value to match the leaf's edge with the cursor
 
   useEffect(() => {
-    const updateMousePosition = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
-    window.addEventListener('mousemove', updateMousePosition);
+    if (!isTouchDevice) {
+      const updateMousePosition = (e: MouseEvent) => {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+      };
 
-    return () => {
-      window.removeEventListener('mousemove', updateMousePosition);
-    };
-  }, []);
+      window.addEventListener('mousemove', updateMousePosition);
+
+      return () => {
+        window.removeEventListener('mousemove', updateMousePosition);
+      };
+    }
+  }, [isTouchDevice]);
+
+  if (isTouchDevice) {
+    return null;
+  }
 
   return (
     <motion.div

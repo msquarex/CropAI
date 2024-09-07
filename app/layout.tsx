@@ -22,12 +22,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" style={{ cursor: 'none' }}>
-      <body className={inter.className} style={{ cursor: 'none' }}>
+    <html lang="en">
+      <body className={inter.className}>
         <AuthProvider>
           {children}
         </AuthProvider>
         <LeafCursor />
+        <style jsx global>{`
+          @media (hover: hover) and (pointer: fine) {
+            html, body, * {
+              cursor: none !important;
+            }
+          }
+        `}</style>
       </body>
     </html>
   );
