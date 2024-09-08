@@ -216,7 +216,7 @@ export default function Dashboard() {
     }, 30);
 
     try {
-      const response = await axios.post('http://localhost:8000/predict_tea_disease', formData, {
+      const response = await axios.post('/api/predict_tea_disease', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         timeout: 10000,
         withCredentials: true
