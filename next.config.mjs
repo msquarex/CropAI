@@ -4,7 +4,7 @@ const nextConfig = {
       return [
         {
           source: '/api/:path*',
-          destination: '/api/:path*',
+          destination: 'https://cropplus-api.vercel.app/api/:path*',
         },
       ];
     },

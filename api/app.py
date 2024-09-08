@@ -22,7 +22,7 @@ app.add_middleware(
 model = tf.keras.models.load_model("CropAPI/tea_VGG16_model.h5")
 
 # Define class labels
-class_labels = pd.read_csv("CropAPI/tea diseases.csv")["folder_name"].tolist()  # Assuming "folder_name" holds class labels
+class_labels = pd.read_csv("api/tea diseases.csv")["folder_name"].tolist()  # Assuming "folder_name" holds class labels
 
 
 def preprocess_image(image_bytes, target_size=(224, 224)):

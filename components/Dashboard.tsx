@@ -219,7 +219,7 @@ export default function Dashboard() {
       const response = await axios.post('/api/predict_tea_disease', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         timeout: 10000,
-        withCredentials: true
+        
       });
 
       console.log('API Response:', response.data);
