@@ -10,6 +10,8 @@ import { FiMail, FiLock, FiHome } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { Leaf } from 'lucide-react';
 import Modal from '@/components/ui/Modal';
+import { updateProfile } from 'firebase/auth';
+import { User } from 'lucide-react';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -18,6 +20,7 @@ export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  const [name, setName] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +29,9 @@ export default function SignUp() {
 
     try {
       // Create user with email and password
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Update the user's display name
+      await updateProfile(userCredential.user, { displayName: name });
       setIsModalOpen(true);
     } catch (error: any) {
       setError(error.message);
@@ -83,6 +88,19 @@ export default function SignUp() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 border border-emerald-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-200"
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="name" className="text-sm font-medium text-emerald-700 flex items-center">
+              <User className="mr-2" /> Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="w-full px-4 py-3 border border-emerald-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-200"
               required
             />
