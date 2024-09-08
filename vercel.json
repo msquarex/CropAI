@@ -1,10 +1,8 @@
 {
     "builds": [
-        { "src": "CropAPI/app.py", "use": "@vercel/python" },
         { "src": "package.json", "use": "@vercel/next" }
     ],
     "routes": [
-        { "src": "/api/(.*)", "dest": "CropAPI/app.py" },
         { "src": "/(.*)", "dest": "/$1" }
     ]
 }
