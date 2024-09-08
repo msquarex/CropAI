@@ -10,6 +10,7 @@ import { useAuth } from '@/lib/auth';
 import { auth } from '@/lib/firebase';
 import { signOut } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -32,6 +33,11 @@ export default function Dashboard() {
   const [facingMode, setFacingMode] = useState<'user' | 'environment'>('environment')
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [predictionResult, setPredictionResult] = useState<{
+    predicted_class: string;
+    confidence_score: number;
+  } | null>(null);
+  const [loadingProgress, setLoadingProgress] = useState<number>(0);
 
   const analyzeSteps = ['Analyzing Photo', 'Checking Crops', 'Detecting Diseases']
 
@@ -46,12 +52,13 @@ export default function Dashboard() {
   }, [isAnalyzing, analyzeSteps.length]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPredictionResult(null);
     const file = event.target.files?.[0]
     if (file) {
       setSelectedFile(file)
       const fileUrl = URL.createObjectURL(file)
       setPreviewUrl(fileUrl)
-      startAnalysis()
+      sendImageToAPI(file)
     }
   }
 
@@ -79,6 +86,7 @@ export default function Dashboard() {
   }
 
   const capturePhoto = () => {
+    setPredictionResult(null);
     if (videoRef.current && canvasRef.current) {
       const context = canvasRef.current.getContext('2d')
       if (context) {
@@ -88,7 +96,11 @@ export default function Dashboard() {
         const imageDataUrl = canvasRef.current.toDataURL('image/jpeg')
         setPreviewUrl(imageDataUrl)
         closeCamera()
-        startAnalysis()
+        
+        // Convert data URL to Blob
+        fetch(imageDataUrl)
+          .then(res => res.blob())
+          .then(blob => sendImageToAPI(blob))
       }
     }
   }
@@ -105,7 +117,7 @@ export default function Dashboard() {
     setIsAnalyzing(true)
     setTimeout(() => {
       setIsAnalyzing(false)
-    }, 6000)
+    }, 10000) // Stop after 10 seconds max
   }
 
   const containerVariants = {
@@ -125,6 +137,65 @@ export default function Dashboard() {
       opacity: 1
     }
   }
+
+  const sendImageToAPI = async (imageFile: File | Blob) => {
+    setIsAnalyzing(true);
+    setLoadingProgress(0);
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    // Start the loading bar animation
+    const startTime = Date.now();
+    const animationDuration = 3000; // 3 seconds
+    const animationInterval = setInterval(() => {
+      const elapsedTime = Date.now() - startTime;
+      const progress = Math.min((elapsedTime / animationDuration) * 100, 100);
+      setLoadingProgress(progress);
+      
+      if (progress === 100) {
+        clearInterval(animationInterval);
+      }
+    }, 30); // Update every 30ms for smoother animation
+
+    try {
+      const response = await axios.post('http://localhost:8000/predict_tea_disease', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 10000,
+        withCredentials: true
+      });
+
+      console.log('API Response:', response.data);
+      setPredictionResult(response.data);
+    } catch (error) {
+      console.error('Error sending image to API:', error);
+      // Handle error (e.g., show error message to user)
+    } finally {
+      // Ensure the loading bar completes the full 3 seconds
+      const remainingTime = Math.max(0, animationDuration - (Date.now() - startTime));
+      setTimeout(() => {
+        clearInterval(animationInterval);
+        setLoadingProgress(100);
+        setIsAnalyzing(false);
+      }, remainingTime);
+    }
+  };
+
+  useEffect(() => {
+    console.log('isAnalyzing:', isAnalyzing);
+  }, [isAnalyzing]);
+
+  useEffect(() => {
+    console.log('predictionResult:', predictionResult);
+  }, [predictionResult]);
+
+  const LoadingBar = ({ progress }: { progress: number }) => (
+    <div className="w-full bg-emerald-200 rounded-full h-2.5 mb-4">
+      <div 
+        className="bg-emerald-600 h-2.5 rounded-full transition-all duration-300 ease-out" 
+        style={{ width: `${progress}%` }}
+      ></div>
+    </div>
+  );
 
   return (
     <div className="flex flex-col min-h-screen bg-emerald-50">
@@ -201,19 +272,25 @@ export default function Dashboard() {
                 )}
                 <canvas ref={canvasRef} className="hidden" />
                 {isAnalyzing && (
-                  
-                  <div className="mt-4 text-center">
-                    <p className="text-emerald-700 font-semibold">{analyzeSteps[analyzeStep]}</p>
-                    <div className="w-full bg-emerald-200 rounded-full h-2.5 mt-2">
-                      <div className="bg-emerald-600 h-2.5 rounded-full" style={{ width: `${((analyzeStep + 1) / analyzeSteps.length) * 100}%` }}></div>
+                  <div className="mt-4">
+                    <p className="text-emerald-700 mb-2">Analyzing image...</p>
+                    <LoadingBar progress={loadingProgress} />
+                  </div>
+                )}
+                  {previewUrl && (
+                    <div className="mt-4">
+                      <div className="max-w-md mx-auto"> {/* Add this wrapper */}
+                        <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-md">
+                        <img 
+                          src={previewUrl} 
+                          alt="Captured crop" 
+                          className="w-full h-full object-contain" 
+                        />
+                      </div>  
                     </div>
                   </div>
                 )}
-                {previewUrl && (
-                  <div className="mt-4">
-                    <img src={previewUrl} alt="Captured crop" className="max-w-full h-auto rounded-lg shadow-md" />
-                  </div>
-                )}
+                
               </CardContent>
             </Card>
           </motion.div>
@@ -222,16 +299,23 @@ export default function Dashboard() {
             className="grid grid-cols-1 md:grid-cols-3 gap-6"
             variants={containerVariants}
           >
-            {['Overall Crop Health', 'Disease Detection', 'Nutrient Deficiencies'].map((title) => (
+            {['Disease Detection', 'Accuracy Score'].map((title) => (
               <motion.div key={title} variants={itemVariants}>
                 <Card>
                   <CardContent className="p-6">
                     <h3 className="text-xl font-semibold mb-4">{title}</h3>
                     <div className="flex items-center justify-between">
-                      <span className="text-5xl font-bold text-emerald-600">87%</span>
+                      <span className="text-5xl font-bold text-emerald-600">
+                        {title === 'Disease Detection' 
+                          ? (predictionResult?.predicted_class || 'No Prediction')
+                          : (predictionResult 
+                              ? `${(predictionResult.confidence_score * 100).toFixed(2)}%` 
+                              : 'N/A'
+                            )}
+                      </span>
                       <Leaf className="h-12 w-12 text-emerald-600" />
                     </div>
-                    <p className="mt-2 text-emerald-700">Your crops are in good health overall.</p>
+                    
                   </CardContent>
                 </Card>
               </motion.div>
