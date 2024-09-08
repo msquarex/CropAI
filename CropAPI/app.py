@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Add your frontend URL
+    allow_origins=["https://cropplus.vercel.app"],  # Add your frontend URL
     allow_credentials=True,
     allow_methods=["POST", "GET"],  # Explicitly allow POST method
     allow_headers=["*"],
