@@ -1,6 +1,5 @@
 # CropAI: AI-Powered Crop Health Monitoring
 
-![CropAI Logo](path/to/your/logo.png)
 
 ## 🌱 About CropAI
 
